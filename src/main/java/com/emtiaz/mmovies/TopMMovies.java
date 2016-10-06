@@ -26,20 +26,7 @@ public class TopMMovies {
     public static class TopMMapper extends Mapper<Object, Text, NullWritable, Movie> {
         public final static String DELIMITER = ",";
         private static HashMap<Integer, Movie> movies = new HashMap<Integer, Movie>();
-        private static SortedSet<Movie> topMMovies = new TreeSet<Movie>(new Comparator<Movie>() {
-            @Override
-            public int compare(Movie m1, Movie m2) {
-                int val = m2.getRating().compareTo(m1.getRating());
-                if(val == 0) {
-                    val = m2.getYear().compareTo(m1.getYear());
-                    if(val == 0) {
-                        m1.getTitle().compareTo(m2.getTitle());
-                    }
-                }
-                return val;
-            }
-        });
-
+        private static SortedSet<Movie> topMMovies = new TreeSet<Movie>(new TopMComparator());
 
         @Override
         protected void map(Object key, Text value, Context context) throws IOException, InterruptedException {
@@ -95,20 +82,7 @@ public class TopMMovies {
 
     public static class TopMReducer extends Reducer<NullWritable, Movie, NullWritable, Text> {
         private Text outputText = new Text();
-        private TreeSet<Movie> topMMovies = new TreeSet<Movie>(new Comparator<Movie>() {
-
-            @Override
-            public int compare(Movie m1, Movie m2) {
-                int val = m2.getRating().compareTo(m1.getRating());
-                if(val == 0) {
-                    val = m1.getYear().compareTo(m2.getYear());
-                    if(val == 0) {
-                        m1.getTitle().compareTo(m2.getTitle());
-                    }
-                }
-                return val;
-            }
-        });
+        private TreeSet<Movie> topMMovies = new TreeSet<Movie>(new TopMComparator());
 
         @Override
         protected void reduce(NullWritable key, Iterable<Movie> values, Context context) throws IOException, InterruptedException {
