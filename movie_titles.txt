@@ -1,0 +1,1 @@
+/tmp/hadoop-imtiaz/mapred/local/1475648589683/movie_titles.txt
